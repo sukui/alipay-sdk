@@ -1,0 +1,19 @@
+{
+  "name": "sukui/alipay-sdk",
+  "homepage": "https://github.com/sukui/alipay-sdk",
+  "description": "Alipay development of SDK",
+  "license": "MIT",
+  "keywords": [
+    "alipay sdk"
+  ],
+  "require": {
+    "php": ">=7",
+    "zanphp/support": "dev-master",
+    "zanphp/http-client":"dev-laogui"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alipay\\": "./Alipay"
+    }
+  }
+}
