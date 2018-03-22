@@ -8,7 +8,6 @@
   ],
   "require": {
     "php": ">=7",
-    "zanphp/support": "dev-master",
     "zanphp/http-client":"dev-laogui"
   },
   "autoload": {
