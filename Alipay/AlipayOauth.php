@@ -21,7 +21,7 @@ class AlipayOauth extends AlipayCommon{
      * @param $scope
      * @return string
      */
-    public function getOauthRedirect($redirectUri,$scope){
+    public function getOauthRedirect($redirectUri,$scope="auth_base"){
         $query = array(
             'app_id'         => $this->getAppId(),
             'redirect_uri'  => $redirectUri,
