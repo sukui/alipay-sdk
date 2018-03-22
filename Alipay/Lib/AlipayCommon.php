@@ -21,15 +21,15 @@ class AlipayCommon
     /**
      * @return static
      */
-    final public static function instance()
+    final public static function instance($config)
     {
-        return static::singleton();
+        return static::singleton($config);
     }
 
-    final public static function singleton()
+    final public static function singleton($config)
     {
         if (null === static::$_instance) {
-            static::$_instance = new static();
+            static::$_instance = new static($config);
         }
         return static::$_instance;
     }
@@ -37,9 +37,9 @@ class AlipayCommon
     /**
      * @return static
      */
-    final public static function getInstance()
+    final public static function getInstance($config)
     {
-        return static::singleton();
+        return static::singleton($config);
     }
 
     final public static function swap($instance)
