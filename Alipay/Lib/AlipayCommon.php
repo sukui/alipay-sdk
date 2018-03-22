@@ -141,8 +141,7 @@ class AlipayCommon
         $method = str_replace('.', '_', $this->method) . '_response';
         $response = yield Tools::httpPost($this->gateway,$options);
         $data = json_decode($response, true);
-        if (!isset($data[$method]['code']) || $data[$method]['code'] !== '10000') {
-
+        if (isset($data[$method]['code']) && $data[$method]['code'] !== '10000') {
             $this->errMsg = (empty($data[$method]['code']) ? '' : "{$data[$method]['msg']}[{$data[$method]['code']}]") . (empty($data[$method]['sub_code']) ? '' : "-{$data[$method]['sub_msg']}[{$data[$method]['sub_code']}]");
             $this->errCode = $data[$method]['code'];
             yield false;
