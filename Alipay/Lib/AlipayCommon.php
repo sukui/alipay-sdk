@@ -13,40 +13,6 @@ class AlipayCommon
 
     public $method;
 
-    /**
-     * @var static
-     */
-    protected static $_instance = null;
-
-    /**
-     * @return static
-     */
-    final public static function instance($config)
-    {
-        return static::singleton($config);
-    }
-
-    final public static function singleton($config)
-    {
-        if (null === static::$_instance) {
-            static::$_instance = new static($config);
-        }
-        return static::$_instance;
-    }
-
-    /**
-     * @return static
-     */
-    final public static function getInstance($config)
-    {
-        return static::singleton($config);
-    }
-
-    final public static function swap($instance)
-    {
-        static::$_instance = $instance;
-    }
-
     public function __construct($config)
     {
         if(empty($config['app_id'])){

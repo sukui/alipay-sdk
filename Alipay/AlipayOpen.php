@@ -2,6 +2,7 @@
 
 namespace Alipay;
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * 阿里开放平台(生活号)
@@ -9,6 +10,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayOpen extends AlipayCommon{
+
+    use  Singleton;
 
     /**
      * 是否关注生活号

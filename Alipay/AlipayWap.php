@@ -3,6 +3,7 @@
 namespace Alipay;
 
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * wap付款
@@ -10,6 +11,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayWap extends AlipayCommon{
+
+    use Singleton;
 
     /**
      * wap收款下单

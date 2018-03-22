@@ -3,6 +3,7 @@
 namespace Alipay;
 
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * 线下交易(面对面交易)
@@ -10,6 +11,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayTrade extends AlipayCommon{
+
+    use Singleton;
 
     /**
      * 统一收单

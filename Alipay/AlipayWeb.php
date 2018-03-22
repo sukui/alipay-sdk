@@ -3,6 +3,7 @@
 namespace Alipay;
 
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * web付款
@@ -10,6 +11,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayWeb extends AlipayCommon{
+
+    use Singleton;
 
     /**
      * APP收款下单

@@ -3,6 +3,7 @@
 namespace Alipay;
 
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * 授权校验
@@ -10,6 +11,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayOauth extends AlipayCommon{
+
+    use Singleton;
 
     protected $authGateway = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
 

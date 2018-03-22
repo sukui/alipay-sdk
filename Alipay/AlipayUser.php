@@ -3,6 +3,7 @@
 namespace Alipay;
 
 use Alipay\Lib\AlipayCommon;
+use Alipay\Lib\Singleton;
 
 /**
  * 用户信息
@@ -10,6 +11,8 @@ use Alipay\Lib\AlipayCommon;
  * @package Alipay
  */
 class AlipayUser extends AlipayCommon{
+
+    use Singleton;
 
     /**
      * 通过用户授权token获取用户信息
