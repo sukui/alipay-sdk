@@ -135,14 +135,16 @@ class AlipayTrade extends AlipayCommon{
     /**
      * 退款
      * @param $out_trade_no
+     * @param $refund_id
      * @param $refund_amount
      * @param null $refund_reason
      * @return \Generator
      */
-    public function refund($out_trade_no,$refund_amount,$refund_reason=null){
+    public function refund($out_trade_no,$refund_id,$refund_amount,$refund_reason=null){
         $biz = [
             'out_trade_no' => $out_trade_no,
-            'refund_amount' => $refund_amount
+            'refund_amount' => $refund_amount,
+            'out_request_no' => $refund_id
         ];
         if($refund_reason != null){
             $biz['refund_reason'] = $refund_reason;
