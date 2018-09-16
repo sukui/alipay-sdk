@@ -152,4 +152,37 @@ class AlipayTrade extends AlipayCommon{
         $this->setMethod('alipay.trade.refund');
         yield $this->getResult($biz);
     }
+
+    /**
+     * 企业付款
+     * @param $account_id
+     * @param int $amount 金额
+     * @param string $out_trade_no 商户订单号
+     * @param $user_name
+     * @param string $remark 备注信息
+     * @return array|bool
+     * @link https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
+     */
+    public function transfers($account_id, $amount, $out_trade_no, $user_name, $remark=null)
+    {
+        $biz = [
+            'out_biz_no' => $out_trade_no,
+            'payee_account' => $account_id,
+            'amount' => $amount,
+            'payee_real_name' => $user_name,
+            'remark' => $remark
+        ];
+
+        if(is_numeric($account_id)){
+            $biz['payee_type'] = 'ALIPAY_USERID';
+        }else{
+            $biz['payee_type'] = 'ALIPAY_LOGONID';
+        }
+
+        if($remark != null){
+            $biz['remark'] = $remark;
+        }
+        $this->setMethod('alipay.fund.trans.toaccount.transfer');
+        yield $this->getResult($biz);
+    }
 }
