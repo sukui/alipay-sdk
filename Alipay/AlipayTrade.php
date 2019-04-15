@@ -154,6 +154,20 @@ class AlipayTrade extends AlipayCommon{
     }
 
     /**
+     * 退款查询
+     * @param $out_trade_no
+     * @return \Generator
+     */
+    public function refundQuery($out_trade_no){
+        $biz = [
+            'out_trade_no' => $out_trade_no,
+            'out_request_no' => $out_trade_no
+        ];
+        $this->setMethod('alipay.trade.fastpay.refund.query');
+        yield $this->getResult($biz);
+    }
+
+    /**
      * 企业付款
      * @param $account_id
      * @param int $amount 金额
