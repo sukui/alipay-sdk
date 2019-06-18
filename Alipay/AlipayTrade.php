@@ -187,7 +187,7 @@ class AlipayTrade extends AlipayCommon{
             'remark' => $remark
         ];
 
-        if(is_numeric($account_id)){
+        if(is_numeric($account_id) && strlen(strval($account_id)) == 16){
             $biz['payee_type'] = 'ALIPAY_USERID';
         }else{
             $biz['payee_type'] = 'ALIPAY_LOGONID';
