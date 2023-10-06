@@ -18,15 +18,29 @@ class AlipayCommon
         if(empty($config['app_id'])){
             throw new \InvalidArgumentException("缺少app_id配置");
         }
-        if (is_null($config['public_key'])) {
-            throw new \InvalidArgumentException('缺少阿里公共秘钥');
-        }
         if (is_null($config['private_key'])) {
             throw new \InvalidArgumentException('缺少私钥');
+        }
+        if (empty($config['alipay_public_cert']) || !file_exists($config['alipay_public_cert'])) {
+            throw new \InvalidArgumentException('缺少支付宝公钥');
+        }
+        if (empty($config['app_public_cert']) || !file_exists($config['app_public_cert'])) {
+            throw new \InvalidArgumentException('缺少应用公钥');
+        }
+        if (empty($config['alipay_root_cert']) || !file_exists($config['alipay_root_cert'])) {
+            throw new \InvalidArgumentException('缺少支付宝根证书');
         }
         if(!empty($config['debug'])){
             $this->gateway = "https://openapi.alipaydev.com/gateway.do?charset=utf-8";
         }
+
+        $config['public_key'] = trim(Tools::getPublicKey($config['alipay_public_cert']));
+        $config['app_cert_sn'] = Tools::getCertSn($config['app_public_cert']);
+        $config['alipay_root_cert_sn'] = Tools::getRootCertSN($config['alipay_root_cert']);
+
+        $content = wordwrap(Tools::trimCert($config['private_key']), 64, "\n", true);
+        $config['private_key'] = "-----BEGIN RSA PRIVATE KEY-----\n{$content}\n-----END RSA PRIVATE KEY-----";
+
         $this->config = $config;
         $this->option = [
             'app_id' => $config['app_id'],
@@ -64,7 +78,7 @@ class AlipayCommon
      */
     public function getOption(array $biz_content=array()){
         if(empty($this->method)){
-            throw new \Exception("缺少指定服务methon");
+            throw new \Exception("缺少指定服务method");
         }
 
         if(!empty($biz_content)){
@@ -73,6 +87,7 @@ class AlipayCommon
 
         $this->setOption('method',$this->method);
         $this->setOption("timestamp", date('Y-m-d H:i:s'));
+        $this->setCertOption();
         return $this->option;
     }
 
@@ -119,13 +134,22 @@ class AlipayCommon
     }
 
     /**
+     * 设置证书选项
+     */
+    public function setCertOption(){
+        $this->setOption("app_cert_sn",$this->config['app_cert_sn']);
+        $this->setOption("alipay_root_cert_sn",$this->config['alipay_root_cert_sn']);
+    }
+
+    /**
      * 签名结果
      * @param $data
      * @return string
      */
     protected function getSign($data)
     {
-        openssl_sign($this->getSignContent($data), $sign, $this->config['private_key'], OPENSSL_ALGO_SHA256);
+        $content = $this->getSignContent($data);
+        openssl_sign($content, $sign, $this->config['private_key'], OPENSSL_ALGO_SHA256);
         return base64_encode($sign);
     }
 
@@ -141,6 +165,9 @@ class AlipayCommon
         $method = str_replace('.', '_', $this->method) . '_response';
         $response = yield Tools::httpPost($this->gateway,$options);
         $data = json_decode($response, true);
+        if(isset($data['error_response'])){
+            $method = 'error_response';
+        }
         if (isset($data[$method]['code']) && $data[$method]['code'] !== '10000') {
             $this->errMsg = (empty($data[$method]['code']) ? '' : "{$data[$method]['msg']}[{$data[$method]['code']}]") . (empty($data[$method]['sub_code']) ? '' : "-{$data[$method]['sub_msg']}[{$data[$method]['sub_code']}]");
             $this->errCode = $data[$method]['code'];
@@ -185,4 +212,5 @@ class AlipayCommon
     {
         return $this->config;
     }
+
 }

@@ -156,12 +156,13 @@ class AlipayTrade extends AlipayCommon{
     /**
      * 退款查询
      * @param $out_trade_no
+     * @param $out_request_no
      * @return \Generator
      */
-    public function refundQuery($out_trade_no){
+    public function refundQuery($out_trade_no,$out_request_no){
         $biz = [
             'out_trade_no' => $out_trade_no,
-            'out_request_no' => $out_trade_no
+            'out_request_no' => $out_request_no
         ];
         $this->setMethod('alipay.trade.fastpay.refund.query');
         yield $this->getResult($biz);
@@ -197,6 +198,23 @@ class AlipayTrade extends AlipayCommon{
             $biz['remark'] = $remark;
         }
         $this->setMethod('alipay.fund.trans.toaccount.transfer');
+        yield $this->getResult($biz);
+    }
+
+    /**
+     * 企业付款查询
+     * @param $out_biz_no
+     * @return array|bool
+     * @link https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
+     */
+    public function transfersQuery($out_biz_no)
+    {
+        $biz = [
+            'out_biz_no' => $out_biz_no,
+            'product_code' => 'TRANS_ACCOUNT_NO_PWD',
+            'biz_scene' =>  'DIRECT_TRANSFER'
+        ];
+        $this->setMethod('alipay.fund.trans.common.query');
         yield $this->getResult($biz);
     }
 }
