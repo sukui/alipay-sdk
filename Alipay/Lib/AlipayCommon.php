@@ -13,6 +13,8 @@ class AlipayCommon
 
     public $method;
 
+    private $is_cert = false;
+
     public function __construct($config)
     {
         if(empty($config['app_id'])){
@@ -21,22 +23,36 @@ class AlipayCommon
         if (is_null($config['private_key'])) {
             throw new \InvalidArgumentException('缺少私钥');
         }
-        if (empty($config['alipay_public_cert']) || !file_exists($config['alipay_public_cert'])) {
-            throw new \InvalidArgumentException('缺少支付宝公钥');
+
+        if(!empty($config['app_public_cert'])){
+            if (empty($config['alipay_public_cert']) || !file_exists($config['alipay_public_cert'])) {
+                throw new \InvalidArgumentException('缺少支付宝公钥');
+            }
+            if (empty($config['app_public_cert']) || !file_exists($config['app_public_cert'])) {
+                throw new \InvalidArgumentException('缺少应用公钥');
+            }
+            if (empty($config['alipay_root_cert']) || !file_exists($config['alipay_root_cert'])) {
+                throw new \InvalidArgumentException('缺少支付宝根证书');
+            }
+            $config['public_key'] = trim(Tools::getPublicKey($config['alipay_public_cert']));
+            $config['app_cert_sn'] = Tools::getCertSn($config['app_public_cert']);
+            $config['alipay_root_cert_sn'] = Tools::getRootCertSN($config['alipay_root_cert']);
+            $this->is_cert = true;
+        }else{
+            if (is_null($config['public_key'])) {
+                throw new \InvalidArgumentException('缺少阿里公共秘钥');
+            }
+            if (is_null($config['private_key'])) {
+                throw new \InvalidArgumentException('缺少私钥');
+            }
+            $content = wordwrap(Tools::trimCert($config['public_key']), 64, "\n", true);
+            $config['public_key'] = "-----BEGIN PUBLIC KEY-----\n{$content}\n-----END PUBLIC KEY-----";
+            $this->is_cert = false;
         }
-        if (empty($config['app_public_cert']) || !file_exists($config['app_public_cert'])) {
-            throw new \InvalidArgumentException('缺少应用公钥');
-        }
-        if (empty($config['alipay_root_cert']) || !file_exists($config['alipay_root_cert'])) {
-            throw new \InvalidArgumentException('缺少支付宝根证书');
-        }
+
         if(!empty($config['debug'])){
             $this->gateway = "https://openapi.alipaydev.com/gateway.do?charset=utf-8";
         }
-
-        $config['public_key'] = trim(Tools::getPublicKey($config['alipay_public_cert']));
-        $config['app_cert_sn'] = Tools::getCertSn($config['app_public_cert']);
-        $config['alipay_root_cert_sn'] = Tools::getRootCertSN($config['alipay_root_cert']);
 
         $content = wordwrap(Tools::trimCert($config['private_key']), 64, "\n", true);
         $config['private_key'] = "-----BEGIN RSA PRIVATE KEY-----\n{$content}\n-----END RSA PRIVATE KEY-----";
@@ -87,7 +103,9 @@ class AlipayCommon
 
         $this->setOption('method',$this->method);
         $this->setOption("timestamp", date('Y-m-d H:i:s'));
-        $this->setCertOption();
+        if($this->is_cert){
+            $this->setCertOption();
+        }
         return $this->option;
     }
 
