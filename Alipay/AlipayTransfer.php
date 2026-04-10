@@ -11,7 +11,7 @@ use Alipay\Lib\Singleton;
  * @package Alipay
  */
 class AlipayTransfer extends AlipayCommon{
-    use Singleton;
+
     /**
      * 新版企业付款
      * @param $account_id

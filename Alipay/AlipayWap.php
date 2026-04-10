@@ -12,8 +12,6 @@ use Alipay\Lib\Singleton;
  */
 class AlipayWap extends AlipayCommon{
 
-    use Singleton;
-
     /**
      * wap收款下单
      * @param $open_id

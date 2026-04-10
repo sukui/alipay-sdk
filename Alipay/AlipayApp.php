@@ -12,8 +12,6 @@ use Alipay\Lib\Singleton;
  */
 class AlipayApp extends AlipayCommon{
 
-    use Singleton;
-
     /**
      * APP收款下单
      * @param $open_id

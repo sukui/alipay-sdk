@@ -12,8 +12,6 @@ use Alipay\Lib\Singleton;
  */
 class AlipayOauth extends AlipayCommon{
 
-    use Singleton;
-
     protected $authGateway = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
 
     public $method = 'alipay.system.oauth.token';

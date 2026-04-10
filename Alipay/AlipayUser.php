@@ -12,8 +12,6 @@ use Alipay\Lib\Singleton;
  */
 class AlipayUser extends AlipayCommon{
 
-    use Singleton;
-
     /**
      * 通过用户授权token获取用户信息
      * @param $access_token

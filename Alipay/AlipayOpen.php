@@ -11,8 +11,6 @@ use Alipay\Lib\Singleton;
  */
 class AlipayOpen extends AlipayCommon{
 
-    use  Singleton;
-
     /**
      * 是否关注生活号
      * @param $user_id
